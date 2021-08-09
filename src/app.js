@@ -1,0 +1,51 @@
+import '@babel/polyfill';
+import config from 'config';
+import http from 'http';
+import loadRoutes from './routing';
+import intiDatabase from './setup/database';
+import express from 'express';
+import logger from 'morgan';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import Q from 'q';
+import NodeGeocoder from 'node-geocoder';
+
+const app = express();
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, '../public')));
+app.use(cors({}));
+app.set('port', config.get('app.port'));
+
+app.use('/geo-location', (req, res, next) => {
+    (async () => {
+        const options = {
+            provider: 'google',
+            apiKey: 'AIzaSyDAS7WGYdvH_ImlvPUnQPv3aAo21uefhyk', // for Mapquest, OpenCage, Google Premier
+            formatter: null // 'gpx', 'string', ...
+        };
+
+        const geocoder = NodeGeocoder(options);
+        const result = await geocoder.geocode('10, Akeem shittu, Isolo');
+        console.log('result:', result);
+        return res.send(result);
+    })();
+});
+export default intiDatabase()
+    .then(() => loadRoutes(app))
+    .then(async (app) => {
+        const server = await http.createServer(app)
+            .listen(config.get('app.port'));
+        console.log(`\n
+	\tApplication listening on ${config.get('app.baseUrl')}\n
+	\tEnvironment => ${config.util.getEnv('NODE_ENV')}: ${server}\n
+	\tDate: ${new Date()}`);
+        return Q.resolve(app);
+    }, err => {
+        console.log('There was an un catch error');
+        console.error(err);
+    });
