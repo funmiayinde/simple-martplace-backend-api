@@ -33,8 +33,8 @@ class ProductController extends AppController {
     async find(req, res, next) {
         const user = await User.findById(req.user);
         console.log('user:', user);
-        // _.extend(req.query, {coordinates: _.get(user.location, 'coordinates', [])} );
-        _.extend(req.query, {coordinates: [-2.84719, 12.87589]} );
+        _.extend(req.query, {coordinates: _.get(user.location, 'coordinates', [])} );
+        // _.extend(req.query, {coordinates: [-2.84719, 12.87589]} );
         super.find(req, res, next);
     }
 
