@@ -10,7 +10,7 @@ export default (error, req, res, next) => {
     if (error instanceof MongooseError) {
         const code = 503;
         meta.status_code = code;
-        meta.error = {code, message: 'Some setup problems with datastore, please try again'};
+        meta.error = {code, message: 'Some setup problems with data-store, please try again'};
         meta.developer_message = error;
     } else if (error.name === 'MongoError') {
         meta.status_code = CONFLICT;
