@@ -88,9 +88,10 @@ export default class ProductProcessor extends AppProcessor {
             }
         }
         const reqBody = JSON.parse(JSON.stringify(req.body));
-        if (reqBody && req.method === 'post') {
-            _.extend(obj, {location: {coordinates: JSON.parse(reqBody.coordinates)}});
+        if (reqBody && req.method === 'POST') {
+            _.extend(obj, {location: {coordinates: reqBody.coordinates.split(',')}});
         }
+
         return obj;
     }
 
