@@ -30,7 +30,7 @@ class AuthController {
             if (iCanLogin instanceof AppError) {
                 return next(iCanLogin);
             }
-            const token = await AuthProcessor.signToken({});
+            const token = await AuthProcessor.signToken({...user.toJSON()});
             req.response = {
                 token,
                 model: User,
