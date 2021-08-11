@@ -91,7 +91,6 @@ export default class ProductProcessor extends AppProcessor {
         if (reqBody && req.method === 'POST') {
             _.extend(obj, {location: {coordinates: reqBody.coordinates.split(',')}});
         }
-
         return obj;
     }
 
